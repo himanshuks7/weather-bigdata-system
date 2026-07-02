@@ -1,0 +1,10 @@
+pandas
+numpy
+pyspark
+streamlit
+plotly
+scikit-learn
+kafka-python
+requests
+torch
+joblib
