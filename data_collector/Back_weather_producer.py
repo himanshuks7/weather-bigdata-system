@@ -6,7 +6,7 @@ from kafka import KafkaProducer
 from datetime import datetime, timezone
 
 API_KEY = "MYAPI"
-KAFKA_TOPIC = "weather_stream_v3"
+KAFKA_TOPIC = "weather_stream"
 KAFKA_BROKER = "localhost:9092" 
 
 cities = [
@@ -28,22 +28,16 @@ def fetch_weather(city):
         response = requests.get(url, timeout=5)
         response.raise_for_status()
         data = response.json()
-        
-        now = datetime.now(timezone.utc)
 
         return {
             "city": city,
-            "latitude": float(data["coord"]["lat"]),     # NEW: Spatial feature
-            "longitude": float(data["coord"]["lon"]),    # NEW: Spatial feature
             "temperature": float(data["main"]["temp"]),
             "humidity": float(data["main"]["humidity"]),
             "pressure": int(data["main"]["pressure"]),
             "wind_speed": float(data["wind"]["speed"]),
             "cloud": int(data["clouds"]["all"]), 
             "weather": str(data["weather"][0]["main"]),
-            "timestamp": now.isoformat(),
-            "month": now.month,                          # NEW: Temporal feature
-            "hour": now.hour                             # NEW: Temporal feature
+            "timestamp": datetime.now(timezone.utc).isoformat()
         }
     except requests.exceptions.RequestException as e:
         print(f"⚠️ API Error for {city}: {e}")
@@ -67,7 +61,7 @@ try:
                     record["wind_speed"] = round(record["wind_speed"] + random.uniform(-0.5, 0.5), 2)
 
                     producer.send(KAFKA_TOPIC, record)
-                    print(f"Sent: {record['city']} | Temp: {record['temperature']}°C | Lat: {record['latitude']} | Lon: {record['longitude']}")
+                    print(f"Sent: {record['city']} | Temp: {record['temperature']}°C | Wind: {record['wind_speed']} kph")
 
         producer.flush()
         print("Batch complete.\n")
