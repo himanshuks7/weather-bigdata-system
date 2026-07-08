@@ -33,8 +33,8 @@ def fetch_weather(city):
 
         return {
             "city": city,
-            "latitude": float(data["coord"]["lat"]),     # NEW: Spatial feature
-            "longitude": float(data["coord"]["lon"]),    # NEW: Spatial feature
+            "latitude": float(data["coord"]["lat"]),     
+            "longitude": float(data["coord"]["lon"]),    
             "temperature": float(data["main"]["temp"]),
             "humidity": float(data["main"]["humidity"]),
             "pressure": int(data["main"]["pressure"]),
@@ -42,8 +42,8 @@ def fetch_weather(city):
             "cloud": int(data["clouds"]["all"]), 
             "weather": str(data["weather"][0]["main"]),
             "timestamp": now.isoformat(),
-            "month": now.month,                          # NEW: Temporal feature
-            "hour": now.hour                             # NEW: Temporal feature
+            "month": now.month,                          
+            "hour": now.hour                             
         }
     except requests.exceptions.RequestException as e:
         print(f"⚠️ API Error for {city}: {e}")
